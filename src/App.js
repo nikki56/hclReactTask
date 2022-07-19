@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import SideNav from "./SideNav";
+import Table from "./Table";
+import Grid from "./Grid";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
+  const [photosData, setPhotosData] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://jsonplaceholder.typicode.com/photos?_start=0&_limit=5`)
+      .then((response) => response.json())
+      .then((data) => setPhotosData(data))
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <SideNav />
+        <Routes>
+          <Route path="/table" element={<Table photosData={photosData} />} />
+          <Route path="/grid" element={<Grid photosData={photosData} />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
